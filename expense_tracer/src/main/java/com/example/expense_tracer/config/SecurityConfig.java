@@ -31,24 +31,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Отключаем CSRF для Postman
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // 1. Регистрацию разрешаем всем (даже без логина)
                         .requestMatchers(HttpMethod.POST, "/user/v1/add").permitAll()
-
-                        // 2. Только АДМИН может видеть всех, удалять и обновлять
                         .requestMatchers("/user/v1/all").hasRole("ADMIN")
                         .requestMatchers("/user/v1/delete/**").hasRole("ADMIN")
                         .requestMatchers("/user/v1/update/**").hasRole("ADMIN")
-
-                        // 3. Просматривать конкретного юзера (id) разрешим и обычным юзерам
                         .requestMatchers("/user/v1/{id}").hasAnyRole("USER", "ADMIN")
-
-                        // 4. Все остальные запросы требуют просто входа
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults()); // Включаем Basic Auth
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
 
