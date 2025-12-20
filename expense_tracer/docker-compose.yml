@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: expense_tracer
+    restart: always
+    environment:
+      POSTGRES_DB: expense_tracer
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: patato
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: expense_app
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/expense_tracer
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: patato
+      SPRING_FLYWAY_ENABLED: "true"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:
