@@ -2,8 +2,10 @@ package com.example.expense_tracer.service;
 
 import com.example.expense_tracer.dto.CategoryDto;
 import com.example.expense_tracer.entity.Category;
+import com.example.expense_tracer.entity.User;
 import com.example.expense_tracer.mapper.CategoryMapper;
 import com.example.expense_tracer.repository.CategoryRepository;
+import com.example.expense_tracer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
     private final CategoryMapper categoryMapper;
 
     public List<CategoryDto> getAll() {
@@ -25,7 +28,10 @@ public class CategoryService {
     }
 
     public CategoryDto add(CategoryDto dto) {
-        Category saved = categoryRepository.save(categoryMapper.toEntity(dto));
+        User user = userRepository.findById(dto.getUserId()).orElseThrow();
+        Category category = categoryMapper.toEntity(dto);
+        category.setUser(user);
+        Category saved = categoryRepository.save(category);
         return categoryMapper.toDto(saved);
     }
 
