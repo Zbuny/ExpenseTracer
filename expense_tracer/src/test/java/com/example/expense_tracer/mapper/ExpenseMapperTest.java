@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class ExpenseMapperTest {
         ent.setId(1L);
         ent.setAmount(100.0);
         ent.setDescription("Lunch");
-        ent.setDate(LocalDate.now());
+        ent.setDate(LocalDateTime.now());
         ent.setUser(user);
         ent.setCategory(category);
 

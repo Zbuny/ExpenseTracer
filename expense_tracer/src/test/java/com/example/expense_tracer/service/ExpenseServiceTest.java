@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -42,7 +43,7 @@ public class ExpenseServiceTest {
         ExpenseDto expenseDto = new ExpenseDto();
         expenseDto.setAmount(100.0 + new Random().nextInt(500));
         expenseDto.setDescription("Test Expense");
-        expenseDto.setDate(LocalDate.now());
+        expenseDto.setDate(LocalDateTime.now());
         expenseDto.setUserId(savedUser.getId());
         expenseDto.setCategoryId(savedCat.getId());
 
@@ -91,7 +92,7 @@ public class ExpenseServiceTest {
         ExpenseDto updateDto = new ExpenseDto();
         updateDto.setAmount(555.55);
         updateDto.setDescription("Updated Desc");
-        updateDto.setDate(LocalDate.now().minusDays(1));
+        updateDto.setDate(LocalDateTime.now().minusDays(1));
         updateDto.setUserId(created.getUserId());
         updateDto.setCategoryId(created.getCategoryId());
 
@@ -115,17 +116,17 @@ public class ExpenseServiceTest {
     void getMonthlyExpensesTest() {
         ExpenseDto e1 = createOne();
         e1.setAmount(500.0);
-        e1.setDate(LocalDate.of(2025, 12, 1));
+        e1.setDate(LocalDateTime.of(2025, 12, 1,0,0));
         expenseService.update(e1.getId(), e1);
 
         ExpenseDto e2 = createOne();
         e2.setAmount(300.0);
-        e2.setDate(LocalDate.of(2025, 12, 15));
+        e2.setDate(LocalDateTime.of(2025, 12, 15,0,0));
         expenseService.update(e2.getId(), e2);
 
         ExpenseDto e3 = createOne();
         e3.setAmount(1000.0);
-        e3.setDate(LocalDate.of(2026, 1, 1));
+        e3.setDate(LocalDateTime.of(2026, 1, 1,0,0));
         expenseService.update(e3.getId(), e3);
 
         Double sum = expenseService.getMonthlyExpenses(2025, 12);
