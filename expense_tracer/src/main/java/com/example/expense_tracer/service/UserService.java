@@ -36,6 +36,7 @@ public class UserService {
 
     public UserDto update(Long id, UserDto dto) {
         User user = userRepository.findById(id).orElseThrow();
+        user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setRole(dto.getRole());
         User updated = userRepository.save(user);
